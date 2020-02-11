@@ -1,0 +1,31 @@
+from numpy import *
+
+class Perceptron():
+#alpha为步长，n_iter是运算次数，
+#np.ones是全是1的矩阵
+#intercept是截距
+    def __init__(self, alpha=0.01, n_iter=20):
+        self.alpha = alpha
+        self.n_iter = n_iter
+
+    def fit(self, X, Y):
+        m, n = shape(X)
+        self.intercept = 0
+        self.W = mat(ones((n, 1)))
+
+        for i in range(self.n_iter):
+            for x, y in zip(X, Y):
+                y_ = float(x * self.W) + self.intercept
+                if y * y_ < 0:
+                    self.W += x.T * self.alpha * y#.T是转置
+                    self.intercept += self.alpha * y
+            if self.loss(X, Y) == 0:
+                return i,self.W,self.intercept
+#损失函数
+    def loss(self, X, Y):
+        sum_loss = 0.0
+        for x, y in zip(X, Y):
+            y_ = float(x * self.W) + self.intercept
+            if y * y_ < 0:
+                sum_loss += - y * y_
+        return sum_loss
